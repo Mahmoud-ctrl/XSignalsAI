@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Renewal Alert - SignalsAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0a0b0f;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1a1b23 0%, #2d2e38 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .logo::before {
+            content: '⚡';
+            font-size: 32px;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .alert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 107, 53, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: #ff6b35;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        
+        .alert-badge::before {
+            content: '⚠️';
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            color: #a0a1a7;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .plan-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #ff6b35;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .plan-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 8px;
+        }
+        
+        .expiry-info {
+            color: #ffffff;
+            font-size: 16px;
+        }
+        
+        .countdown {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .countdown-number {
+            font-size: 36px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .countdown-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .cta-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .features-list {
+            margin: 30px 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            color: #a0a1a7;
+        }
+        
+        .feature-item::before {
+            content: '✓';
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-text {
+            color: #6c7293;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-link {
+            color: #6c7293;
+            text-decoration: none;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: #ff6b35;
+        }
+        
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .header,
+            .content,
+            .footer {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .countdown-number {
+                font-size: 28px;
+            }
+            
+            .cta-button {
+                padding: 14px 30px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">SignalsAI</div>
+        </div>
+        
+        <div class="content">
+            <div class="alert-badge">Renewal Required</div>
+            
+            <h1 class="title">Your {{ plan_name }} Plan is Expiring Soon!</h1>
+            
+            <p class="subtitle">
+                Hi there! We wanted to give you a heads up that your subscription is about to expire. 
+                Don't let your trading momentum stop - renew now to continue accessing our premium AI-powered crypto signals.
+            </p>
+            
+            <div class="plan-info">
+                <div class="plan-name">{{ plan_name }} Plan</div>
+                <div class="expiry-info">Expires on: {{ expiry_date.strftime('%B %d, %Y at %I:%M %p') }}</div>
+            </div>
+            
+            <div class="countdown">
+                <span class="countdown-number">3</span>
+                <span class="countdown-text">Days Remaining</span>
+            </div>
+            
+            <div class="features-list">
+                <div class="feature-item">AI-powered precision crypto signals</div>
+                <div class="feature-item">94.8% historical accuracy</div>
+                <div class="feature-item">24/7 autonomous monitoring</div>
+                <div class="feature-item">Real-time market analysis</div>
+                <div class="feature-item">Priority customer support</div>
+            </div>
+            
+            <div class="cta-container">
+                <a href="{{ base_url }}/pricing" class="cta-button">Act Now - Renew Subscription</a>
+            </div>
+            
+            <p style="color: #6c7293; font-size: 14px; text-align: center; margin-top: 20px;">
+                Questions? Reply to this email or contact our support team.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">
+                Thank you for choosing SignalsAI for your crypto trading journey.
+            </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-link">Unsubscribe</a>
+                <a href="#" class="social-link">Privacy Policy</a>
+                <a href="#" class="social-link">Terms of Service</a>
+            </div>
+            
+            <p style="color: #6c7293; font-size: 12px; margin-top: 15px;">
+                © 2025 SignalsAI. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
